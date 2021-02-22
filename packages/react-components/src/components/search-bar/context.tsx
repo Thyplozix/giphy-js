@@ -1,4 +1,4 @@
-import { GifsResult, GiphyFetch, SearchOptions } from '@giphy/js-fetch-api'
+import { GifsResult, GiphyFetch, MediaType, SearchOptions } from '@giphy/js-fetch-api'
 import { IChannel } from '@giphy/js-types'
 import { ThemeProvider } from 'emotion-theming'
 import React, { createContext, ReactNode, useEffect, useState } from 'react'
@@ -7,16 +7,17 @@ import { initTheme, SearchTheme } from './theme'
 
 export type SearchContextProps = {
     setSearch: (searchTerm: string) => void
+    searchMode: MediaType
     term: string
     channelSearch: string
     activeChannel: IChannel | undefined
     setActiveChannel: (channel: IChannel | undefined) => void
     fetchGifs: (offset: number) => Promise<GifsResult>
+    animateText: (offset: number) => Promise<GifsResult>
     fetchChannelSearch: (offset: number) => Promise<IChannel[]>
     isFetching: boolean
     trendingSearches: string[]
     searchKey: string
-    createText?: boolean
 }
 
 export const SearchContext = createContext({} as SearchContextProps)
@@ -28,7 +29,7 @@ type Props = {
     theme?: Partial<SearchTheme>
     initialTerm?: string
     initialChannel?: IChannel
-    createText?: boolean
+    searchMode?: MediaType
 }
 
 const SearchContextManager = ({
@@ -38,7 +39,7 @@ const SearchContextManager = ({
     theme,
     initialTerm = '',
     initialChannel,
-    createText,
+    searchMode = 'gifs',
 }: Props) => {
     const gf = new GiphyFetch(apiKey)
 
@@ -74,10 +75,25 @@ const SearchContextManager = ({
     // search fetch
     const fetchGifs = async (offset: number) => {
         setIsFetching(true)
-        const result = await gf.search(term, { ...options, offset, channel: activeChannel?.user?.username })
+        const result = await gf.search(term, {
+            ...options,
+            type: searchMode,
+            offset,
+            channel: activeChannel?.user?.username,
+        })
         setIsFetching(false)
         return result
     }
+
+    const animateText = async (offset: number) => {
+        const limit = options.limit || 50
+        const result = await gf.animate(term, { offset, limit })
+        if (!result.pagination) {
+            result.pagination = { count: limit, total_count: limit, offset }
+        }
+        return result
+    }
+
     const fetchChannelSearch = async (offset: number) => {
         const result = await fetch(
             `https://api.giphy.com/v1/channels/search?q=${encodeURIComponent(
@@ -106,9 +122,10 @@ const SearchContextManager = ({
                 trendingSearches,
                 setSearch,
                 fetchGifs,
+                animateText,
                 searchKey,
                 isFetching,
-                createText,
+                searchMode,
             }}
         >
             <ThemeProvider theme={initTheme(theme)}>

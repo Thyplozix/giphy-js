@@ -73,7 +73,7 @@ export const SearchExperience = () => (
 )
 
 export const CreateTextExperience = () => (
-    <SearchContextManager apiKey={apiKey} createText>
+    <SearchContextManager apiKey={apiKey} searchMode="text">
         <Components />
     </SearchContextManager>
 )

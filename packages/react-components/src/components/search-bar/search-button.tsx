@@ -129,14 +129,14 @@ const CreateTextIcon = styled(CreateTextIcon_)`
 `
 
 const SearchButton = () => {
-    const { isFetching, createText } = useContext(SearchContext)
+    const { isFetching, searchMode } = useContext(SearchContext)
     // let the animation run by throttling isFetching
     const throttledFetch = useThrottle(isFetching, 1000)
-    const searchbarColors: [string, string] = createText ? ['#5C6FFF', '#18B5FF'] : [purp, pink]
+    const searchbarColors: [string, string] = searchMode === 'text' ? ['#5C6FFF', '#18B5FF'] : [purp, pink]
     return (
         <Container>
             <GradientBox searchbarColors={searchbarColors} />
-            {createText ? <CreateTextIcon /> : <SearchIcon />}
+            {searchMode === 'text' ? <CreateTextIcon /> : <SearchIcon />}
             {throttledFetch && (
                 <Fx>
                     <Scanner />

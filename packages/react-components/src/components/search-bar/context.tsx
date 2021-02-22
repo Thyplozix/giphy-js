@@ -16,6 +16,7 @@ export type SearchContextProps = {
     isFetching: boolean
     trendingSearches: string[]
     searchKey: string
+    createText?: boolean
 }
 
 export const SearchContext = createContext({} as SearchContextProps)
@@ -27,9 +28,18 @@ type Props = {
     theme?: Partial<SearchTheme>
     initialTerm?: string
     initialChannel?: IChannel
+    createText?: boolean
 }
 
-const SearchContextManager = ({ children, options = {}, apiKey, theme, initialTerm = '', initialChannel }: Props) => {
+const SearchContextManager = ({
+    children,
+    options = {},
+    apiKey,
+    theme,
+    initialTerm = '',
+    initialChannel,
+    createText,
+}: Props) => {
     const gf = new GiphyFetch(apiKey)
 
     // the search term
@@ -98,6 +108,7 @@ const SearchContextManager = ({ children, options = {}, apiKey, theme, initialTe
                 fetchGifs,
                 searchKey,
                 isFetching,
+                createText,
             }}
         >
             <ThemeProvider theme={initTheme(theme)}>

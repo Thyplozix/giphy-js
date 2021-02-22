@@ -72,6 +72,12 @@ export const SearchExperience = () => (
     </SearchContextManager>
 )
 
+export const CreateTextExperience = () => (
+    <SearchContextManager apiKey={apiKey} createText>
+        <Components />
+    </SearchContextManager>
+)
+
 export const SearchExperienceCondensed = () => (
     <SearchContextManager apiKey={apiKey} theme={{ condensedMode: true }}>
         <Components />

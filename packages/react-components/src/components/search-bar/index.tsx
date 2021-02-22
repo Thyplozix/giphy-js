@@ -102,13 +102,16 @@ const SearchBar = ({ className, placeholder = 'Search GIPHY', clear = false, aut
 
     // key ups to clear the active channel
     const onKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        switch (e.keyCode) {
+        const key = e.keyCode || e.key
+        switch (key) {
             case 8: // backspace
+            case 'Backspace':
                 if (lastTerm === '') {
                     setActiveChannel(undefined)
                 }
                 break
             case 27: // esc
+            case `Escape`: // esc
                 setActiveChannel(undefined)
                 break
             default:

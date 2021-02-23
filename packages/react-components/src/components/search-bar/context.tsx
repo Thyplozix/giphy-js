@@ -60,7 +60,7 @@ const SearchContextManager = ({
 
     const setActiveChannel = (activeChannel: IChannel | undefined) => {
         _setActiveChannel(activeChannel)
-        setTerm('') // clear this here
+        setTerm('') // TODO: clear this here?
     }
 
     // fetched list of trending search terms

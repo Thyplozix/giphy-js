@@ -2,7 +2,6 @@ import { css, keyframes } from '@emotion/core'
 import React, { useContext } from 'react'
 import useThrottle from 'react-use/lib/useThrottle'
 import { SearchContext } from './context'
-import CreateTextIcon_ from './create-text-icon'
 import SearchIcon_ from './search-icon'
 import styled, { getSize } from './theme'
 
@@ -59,8 +58,8 @@ const Container = styled.div`
     ${(props) => getSize(props.theme, true)}
 `
 
-const GradientBox = styled.div(({ searchbarColors }: { searchbarColors: [string, string] }) => {
-    return css`
+const GradientBox = styled.div(
+    ({ searchbarColors }: { searchbarColors: [string, string] }) => css`
         position: absolute;
         height: 100%;
         width: 100%;
@@ -85,7 +84,7 @@ const GradientBox = styled.div(({ searchbarColors }: { searchbarColors: [string,
             width: 400%;
         }
     `
-})
+)
 
 const Fx = styled.div`
     width: 100%;
@@ -121,22 +120,17 @@ const SearchIcon = styled(SearchIcon_)`
     height: 60%;
 `
 
-const CreateTextIcon = styled(CreateTextIcon_)`
-    z-index: 1;
-    display: flex;
-    width: 60%;
-    height: 60%;
-`
+// this was going to be theme-able, now it's not
+const searchbarColors: [string, string] = [purp, pink]
 
 const SearchButton = () => {
-    const { isFetching, searchMode } = useContext(SearchContext)
+    const { isFetching } = useContext(SearchContext)
     // let the animation run by throttling isFetching
     const throttledFetch = useThrottle(isFetching, 1000)
-    const searchbarColors: [string, string] = searchMode === 'text' ? ['#5C6FFF', '#18B5FF'] : [purp, pink]
     return (
         <Container>
             <GradientBox searchbarColors={searchbarColors} />
-            {searchMode === 'text' ? <CreateTextIcon /> : <SearchIcon />}
+            <SearchIcon />
             {throttledFetch && (
                 <Fx>
                     <Scanner />

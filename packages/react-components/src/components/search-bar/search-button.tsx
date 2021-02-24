@@ -1,4 +1,4 @@
-import { css, keyframes } from '@emotion/core'
+import { keyframes } from '@emotion/core'
 import React, { useContext } from 'react'
 import useThrottle from 'react-use/lib/useThrottle'
 import { SearchContext } from './context'
@@ -58,33 +58,26 @@ const Container = styled.div`
     ${(props) => getSize(props.theme, true)}
 `
 
-const GradientBox = styled.div(
-    ({ searchbarColors }: { searchbarColors: [string, string] }) => css`
+const GradientBox = styled.div`
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(45deg, ${purp} 0%, ${pink} 100%);
+    overflow: hidden;
+    &:before {
+        animation: ${gradientFade} ${time} linear 0s infinite;
+        background-image: linear-gradient(45deg, ${purp} 0%, ${pink} 50%, ${purp} 100%);
+        background-size: 400%;
+        background-position: 0% 100%;
+        content: '';
         position: absolute;
-        height: 100%;
-        width: 100%;
-        overflow: hidden;
-        background: linear-gradient(45deg, ${searchbarColors[0]} 0%, ${searchbarColors[1]} 100%);
-        &:before {
-            animation: ${gradientFade} ${time} linear 0s infinite;
-            background-image: linear-gradient(
-                45deg,
-                ${searchbarColors[0]} 0%,
-                ${searchbarColors[1]} 50%,
-                ${searchbarColors[0]} 100%
-            );
-            background-size: 400%;
-            background-position: 0% 100%;
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            width: 400%;
-        }
-    `
-)
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 400%;
+    }
+`
 
 const Fx = styled.div`
     width: 100%;
@@ -120,16 +113,13 @@ const SearchIcon = styled(SearchIcon_)`
     height: 60%;
 `
 
-// this was going to be theme-able, now it's not
-const searchbarColors: [string, string] = [purp, pink]
-
 const SearchButton = () => {
     const { isFetching } = useContext(SearchContext)
     // let the animation run by throttling isFetching
     const throttledFetch = useThrottle(isFetching, 1000)
     return (
         <Container>
-            <GradientBox searchbarColors={searchbarColors} />
+            <GradientBox />
             <SearchIcon />
             {throttledFetch && (
                 <Fx>

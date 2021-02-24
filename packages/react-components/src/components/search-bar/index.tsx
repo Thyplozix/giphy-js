@@ -57,11 +57,9 @@ const Input = styled.input<{ isUsernameSearch: boolean }>`
         `}
 `
 
-const SearchBar = ({ className, placeholder, clear = false, autoFocus }: Props) => {
-    const { setSearch, activeChannel, setActiveChannel, term, channelSearch, searchMode } = useContext(SearchContext)
-    if (!placeholder) {
-        placeholder = searchMode === 'text' ? `Type to Create` : `Search GIPHY`
-    }
+const SearchBar = ({ className, placeholder = `Search GIPHY`, clear = false, autoFocus }: Props) => {
+    const { setSearch, activeChannel, setActiveChannel, term, channelSearch } = useContext(SearchContext)
+
     // debounce local input
     const [debouncedTerm, setDebouncedInput] = useState<string>(term)
 
